@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Culture Quiz for Kids</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #48dbfb 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 700px;
+            width: 100%;
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #e74c3c, #f39c12);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .quiz-container {
+            padding: 30px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #e74c3c;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .question-section {
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .image-placeholder {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin: 15px 0;
+            color: #6c757d;
+        }
+
+        .image-placeholder-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        .chinese-text {
+            font-size: 1.8em;
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 15px 0;
+            text-align: center;
+            padding: 15px;
+            background: #fef9e7;
+            border-radius: 10px;
+            border-left: 4px solid #f39c12;
+        }
+
+        .pinyin-text {
+            font-style: italic;
+            color: #7f8c8d;
+            font-size: 0.95em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border: 2px solid transparent;
+            padding: 15px 20px;
+            font-size: 1em;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            min-height: 60px;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #e74c3c;
+            background: linear-gradient(145deg, #fff, #f8f9fa);
+        }
+
+        .option-btn.correct {
+            background: linear-gradient(145deg, #2ecc71, #27ae60);
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .option-btn.incorrect {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            color: white;
+            border-color: #c0392b;
+        }
+
+        .option-chinese {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .option-btn.correct .option-chinese,
+        .option-btn.incorrect .option-chinese {
+            color: white;
+        }
+
+        .option-pinyin {
+            font-style: italic;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 3px;
+        }
+
+        .option-btn.correct .option-pinyin,
+        .option-btn.incorrect .option-pinyin {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .option-english {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .option-btn.correct .option-english,
+        .option-btn.incorrect .option-english {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(145deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .feedback {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feedback.show {
+            opacity: 1;
+        }
+
+        .result-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: #f8f9fa;
+            margin: 20px;
+            border-radius: 15px;
+        }
+
+        .final-score {
+            font-size: 3em;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .start-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .start-screen h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .start-screen p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #e74c3c;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .feature h3 {
+            color: #e74c3c;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .feature p {
+            font-size: 0.9em;
+            color: #666;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { margin: 0; border-radius: 15px; }
+            .header { padding: 25px 20px; }
+            .header h1 { font-size: 1.8em; }
+            .quiz-container { padding: 20px; }
+            .chinese-text { font-size: 1.5em; }
+            .question-text { font-size: 1.1em; }
+            .option-btn { padding: 12px 15px; min-height: 55px; }
+            .control-buttons { flex-direction: column; }
+            .btn { width: 100%; }
+            .final-score { font-size: 2.5em; }
+            .stats { padding: 15px; }
+            .stat-number { font-size: 1.6em; }
+            .features { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Chinese Culture Quiz for Kids</h1>
+            <p>Learn Chinese Characters, Culture & More!</p>
+        </div>
+
+        <div class="quiz-container">
+            <!-- Start Screen -->
+            <div class="start-screen" id="startScreen">
+                <h2>Welcome to Chinese Culture Quiz! 🏮</h2>
+                <p>Test your knowledge of Chinese characters, culture, traditions, and language. Perfect for kids learning Chinese!</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <h3>📚 20 Questions</h3>
+                        <p>Covering Chinese characters, culture, and traditions</p>
+                    </div>
+                    <div class="feature">
+                        <h3>🎨 Interactive</h3>
+                        <p>Fun multiple choice questions with instant feedback</p>
+                    </div>
+                    <div class="feature">
+                        <h3>🏆 Progress Tracking</h3>
+                        <p>See your score and learn as you go</p>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="startQuiz()">🚀 Start Quiz</button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar" id="progressBar" style="display: none;">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats" id="stats" style="display: none;">
+                <div class="stat-item">
+                    <span class="stat-number" id="currentQuestion">1</span>
+                    <div class="stat-label">Question</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="correctCount">0</span>
+                    <div class="stat-label">Correct</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalQuestions">20</span>
+                    <div class="stat-label">Total</div>
+                </div>
+            </div>
+
+            <!-- Question Section -->
+            <div class="question-section" id="questionSection" style="display: none;">
+                <div class="question-number" id="questionNumber">Question 1 of 20</div>
+                <div class="question-text" id="questionText"></div>
+                <div id="questionImage"></div>
+                <!-- Only show Chinese text and pinyin when needed for the question -->
+                <div class="chinese-text" id="chineseText" style="display: none;"></div>
+                <div class="pinyin-text" id="pinyinText" style="display: none;"></div>
+                <div class="options" id="optionsContainer"></div>
+            </div>
+
+            <!-- Feedback -->
+            <div class="feedback" id="feedback"></div>
+
+            <!-- Control Buttons -->
+            <div class="control-buttons" id="controlButtons" style="display: none;">
+                <button class="btn btn-secondary" onclick="skipQuestion()">⏭️ Skip</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn" style="display: none;">➡️ Next Question</button>
+            </div>
+
+            <!-- Result Section -->
+            <div class="result-section" id="resultSection" style="display: none;">
+                <div class="final-score" id="finalScore"></div>
+                <h3 id="resultMessage"></h3>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 25px; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" onclick="backToHome()">🏠 Back to Home</button>
+                    <button class="btn btn-primary" onclick="startQuiz()">🔄 Try Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Data from the document
+        const quizData = [
+            {
+                question: "Among the tools used in Chinese calligraphy, the ones known as the 'Four Treasures of the Study' are ( ).",
+                chinese: "文房四宝",
+                pinyin: "wénfáng sìbǎo", 
+                showChineseUpfront: false, // Don't show answer before user selects
+                image: { src: "images/image1.jpg", description: "Traditional Chinese calligraphy tools", placeholder:false },
+                options: [
+                    { chinese: "笔墨纸砚", pinyin: "bǐ mò zhǐ yàn", english: "brush, ink, paper, and inkstone" },
+                    { chinese: "琴棋书画", pinyin: "qín qí shū huà", english: "music, chess, calligraphy, painting" },
+                    { chinese: "琴棋茶书", pinyin: "qín qí chá shū", english: "music, chess, tea, books" }
+                ],
+                correct: 0
+            },
+            {
+                question: "I wish I had more ________ to go out.",
+                chinese: "时间",
+                pinyin: "shí jiān",
+                showChineseUpfront: false, // Don't show answer before user selects
+                image: { src: "images/image2.jpg", description: "Chinese text showing time-related words", placeholder:false },
+                options: [
+                    { chinese: "时间", pinyin: "shí jiān", english: "time" },
+                    { chinese: "时后", pinyin: "shí hòu", english: "after time" },
+                    { chinese: "时辰", pinyin: "shí chén", english: "hour" }
+                ],
+                correct: 0
+            },
+            {
+                question: "The radical (部首) of the Chinese character 渡 is",
+                chinese: "渡",
+                pinyin: "dù",
+                showChineseUpfront: true, // Show the character being asked about
+                image: { src: "images/image3.jpg", description: "Chinese character 渡 with radical highlighted", placeholder:false },
+                options: [
+                    { chinese: "丶", pinyin: "diǎn", english: "dot" },
+                    { chinese: "氵", pinyin: "shuǐ", english: "water radical" },
+                    { chinese: "度", pinyin: "dù", english: "degree" }
+                ],
+                correct: 1
+            },
+            {
+                question: "Table tennis is China's national sport. Many people start ( ) table tennis from a young age.",
+                chinese: "打",
+                pinyin: "dǎ",
+                showChineseUpfront: false, // Don't show answer before user selects
+                image: { src: "images/image4.png", description: "People playing table tennis", placeholder:false },
+                options: [
+                    { chinese: "拍", pinyin: "pāi", english: "clap" },
+                    { chinese: "投", pinyin: "tóu", english: "throw" },
+                    { chinese: "打", pinyin: "dǎ", english: "play" }
+                ],
+                correct: 2
+            },
+            {
+                question: "The idiom that comes to your mind when you see the picture is ( ), which is a metaphor for things going very smoothly.",
+                chinese: "势如破竹",
+                pinyin: "shì rú pò zhú",
+                showChineseUpfront: false, // Don't show answer before user selects
+                image: { src: "images/image5.png", description: "Image of bamboo being split", placeholder:false },
+                options: [
+                    { chinese: "竹报平安", pinyin: "zhú bào píng ān", english: "bamboo reports peace" },
+                    { chinese: "胸有成竹", pinyin: "xiōng yǒu chéng zhú", english: "have a plan ready" },
+                    { chinese: "势如破竹", pinyin: "shì rú pò zhú", english: "with unstoppable force" }
+                ],
+                correct: 2
+            },
+            {
+                question: "'________' is not a traditional Chinese folk art.",
+                chinese: "扑克",
+                pinyin: "pū kè",
+                showChineseUpfront: false, // Don't show answer before user selects
+                options: [
+                    { chinese: "扑克", pinyin: "pū kè", english: "playing cards" },
+                    { chinese: "面塑", pinyin: "miàn sù", english: "dough modeling" },
+                    { chinese: "剪纸", pinyin: "jiǎn zhǐ", english: "paper cutting" }
+                ],
+                correct: 0
+            },
+            {
+                question: "The earliest Chinese characters in China are like paintings. For example, the earliest Chinese character for 'horse' is the one shown in the first picture. Please look at the character in the second picture. What do you think it is?",
+                chinese: "牛",
+                pinyin: "niú",
+                showChineseUpfront: false, // Don't show answer before user selects
+                image: { src: "images/image6.png", description: "Ancient Chinese character resembling an ox", placeholder:false },
+                options: [
+                    { chinese: "鸡", pinyin: "jī", english: "chicken" },
+                    { chinese: "牛", pinyin: "niú", english: "ox" },
+                    { chinese: "马", pinyin: "mǎ", english: "horse" }
+                ],
+                correct: 1
+            },
+            {
+                question: "As the saying goes, 'A smile makes you ten years younger.' The pronunciation of '少' is",
+                chinese: "少",
+                pinyin: "shào",
+                showChineseUpfront: true, // Show the character being asked about
+                options: [
+                    { chinese: "shǎo", pinyin: "", english: "third tone (few)" },
+                    { chinese: "shào", pinyin: "", english: "fourth tone (young)" },
+                    { chinese: "sháo", pinyin: "", english: "second tone" }
+                ],
+                correct: 1
+            },
+            {
+                question: "The autumn weather is crisp and refreshing, and the rice flowers are fragrant. Next month I want to ( ) a train to Tianjin to see the beautiful rice fields.",
+                chinese: "坐",
+                pinyin: "zuò",
+                showChineseUpfront: false, // Don't show answer before user selects
+                image: { src: "images/image7.jpg", description: "Beautiful rice fields in autumn", placeholder:false },
+                options: [
+                    { chinese: "坐", pinyin: "zuò", english: "take/sit" },
+                    { chinese: "骑", pinyin: "qí", english: "ride" },
+                    { chinese: "打", pinyin: "dǎ", english: "take (taxi)" }
+                ],
+                correct: 0
+            },
+            {
+                question: "( ) is not a plant.",
+                chinese: "虫",
+                pinyin: "chóng",
+                showChineseUpfront: false, // Don't show answer before user selects
+                options: [
+                    { chinese: "树", pinyin: "shù", english: "tree" },
+                    { chinese: "花", pinyin: "huā", english: "flower" },
+                    { chinese: "虫", pinyin: "chóng", english: "insect" }
+                ],
+                correct: 2
+            },
+            {
+                question: "'木(mù)' can be combined with ( ) to form a new character (zì)",
+                chinese: "木",
+                pinyin: "mù",
+                showChineseUpfront: true, // Show the character being asked about
+                options: [
+                    { chinese: "木", pinyin: "mù", english: "wood (木+木=林)" },
+                    { chinese: "名", pinyin: "míng", english: "name" },
+                    { chinese: "天", pinyin: "tiān", english: "sky" }
+                ],
+                correct: 0
+            },
+            {
+                question: "The pinyin pronunciation of 'huà' is ( )",
+                chinese: "huà",
+                pinyin: "huà",
+                showChineseUpfront: true, // Show the pronunciation being asked about
+                options: [
+                    { chinese: "花", pinyin: "huā", english: "flower" },
+                    { chinese: "画", pinyin: "huà", english: "paint/picture" },
+                    { chinese: "滑", pinyin: "huá", english: "slippery" }
+                ],
+                correct: 1
+            },
+            {
+                question: "After looking forward ___ looking forward ________, I finally arrived in beautiful China.",
+                chinese: "星星月月",
+                pinyin: "xīng xīng yuè yuè",
+                showChineseUpfront: false, // Don't show answer before user selects
+                image: { src: "images/image9.png", description: "Chinese text options showing star and moon characters", placeholder:false },
+                options: [
+                    { chinese: "太阳、月亮", pinyin: "tài yáng, yuè liàng", english: "sun, moon" },
+                    { chinese: "星星、太阳", pinyin: "xīng xīng, tài yáng", english: "star, sun" },
+                    { chinese: "星星、月亮", pinyin: "xīng xīng, yuè liàng", english: "star, moon" }
+                ],
+                correct: 2
+            },
+            {
+                question: "Many cities in China have their own specialties, such as Chongqing hotpot. Which of the following foods is a Beijing specialty?",
+                chinese: "烤鸭",
+                pinyin: "kǎo yā",
+                showChineseUpfront: false, // Don't show answer before user selects
+                options: [
+                    { chinese: "涮肉", pinyin: "shuàn ròu", english: "boiled mutton" },
+                    { chinese: "火锅", pinyin: "huǒ guō", english: "hotpot" },
+                    { chinese: "烤鸭", pinyin: "kǎo yā", english: "roast duck" }
+                ],
+                correct: 2
+            },
+            {
+                question: "The giant panda is China's national treasure and a beloved messenger of cultural exchange for people all over the world. What does the giant panda symbolize?",
+                chinese: "和平、友谊",
+                pinyin: "hé píng, yǒu yì",
+                showChineseUpfront: false, // Don't show answer before user selects
+                image: { src: "images/image8.png", description: "Cute giant panda image", placeholder:false },
+                options: [
+                    { chinese: "威武、凶猛", pinyin: "wēi wǔ, xiōng měng", english: "mighty, fierce" },
+                    { chinese: "和平、友谊", pinyin: "hé píng, yǒu yì", english: "peace, friendship" },
+                    { chinese: "狡猾、调皮", pinyin: "jiǎo huá, tiáo pí", english: "cunning, mischievous" }
+                ],
+                correct: 1
+            },
+            {
+                question: "Tianjin's time-honored brand 'Niren Zhang' is one of the representatives of Chinese clay sculpture art. It was founded in the Qing Dynasty and has been passed down for more than 200 years. The colorful clay figurines of 'Niren Zhang' look like the real thing, which is really ( ).",
+                chinese: "栩栩如生",
+                pinyin: "xǔ xǔ rú shēng",
+                showChineseUpfront: false, // Don't show answer before user selects
+                image: { src: "images/image10.png", description: "Colorful clay figurines by Niren Zhang", placeholder:false },
+                options: [
+                    { chinese: "可喜可贺", pinyin: "kě xǐ kě hè", english: "congratulatory" },
+                    { chinese: "虎虎生威", pinyin: "hǔ hǔ shēng wēi", english: "vigorous" },
+                    { chinese: "栩栩如生", pinyin: "xǔ xǔ rú shēng", english: "lifelike" }
+                ],
+                correct: 2
+            },
+            {
+                question: "In the video above, which animal belongs to the traditional Chinese zodiac?",
+                chinese: "喜羊羊",
+                pinyin: "xǐ yáng yáng",
+                showChineseUpfront: false, // Don't show answer before user selects
+                image: { src: "images/image11.png", description: "Cartoon characters from Pleasant Goat series", placeholder:false },
+                options: [
+                    { chinese: "灰太狼", pinyin: "huī tài láng", english: "Big Bad Wolf" },
+                    { chinese: "喜羊羊", pinyin: "xǐ yáng yáng", english: "goat" },
+                    { chinese: "食人鱼", pinyin: "shí rén yú", english: "piranha" }
+                ],
+                correct: 1
+            },
+            {
+                question: "Which of the following is closest to the word 'friend'?",
+                chinese: "知音",
+                pinyin: "zhī yīn",
+                showChineseUpfront: false, // Don't show answer before user selects
+                options: [
+                    { chinese: "亲戚", pinyin: "qīn qi", english: "relative" },
+                    { chinese: "同窗", pinyin: "tóng chuāng", english: "classmate" },
+                    { chinese: "知音", pinyin: "zhī yīn", english: "bosom friend" }
+                ],
+                correct: 2
+            },
+            {
+                question: "Which Chinese idiom is described in the picture?",
+                chinese: "举一反三",
+                pinyin: "jǔ yī fǎn sān",
+                showChineseUpfront: false, // Don't show answer before user selects
+                image: { src: "images/image12.png", description: "Illustration showing learning by analogy concept", placeholder:false },
+                options: [
+                    { chinese: "举一反三", pinyin: "jǔ yī fǎn sān", english: "learn by analogy" },
+                    { chinese: "一举两得", pinyin: "yī jǔ liǎng dé", english: "kill two birds with one stone" },
+                    { chinese: "举手之劳", pinyin: "jǔ shǒu zhī láo", english: "easy task" }
+                ],
+                correct: 0
+            },
+            {
+                question: "If we use the correct vocal method and sing 'Little Wine Wo' with emotion, we can sing it ( ) beautifully.",
+                chinese: "更",
+                pinyin: "gèng",
+                showChineseUpfront: false, // Don't show answer before user selects
+                options: [
+                    { chinese: "太", pinyin: "tài", english: "too" },
+                    { chinese: "更", pinyin: "gèng", english: "more" },
+                    { chinese: "越", pinyin: "yuè", english: "increasingly" }
+                ],
+                correct: 1
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+        let hasAnswered = false;
+
+        // DOM Elements
+        const elements = {
+            startScreen: document.getElementById('startScreen'),
+            progressBar: document.getElementById('progressBar'),
+            progressFill: document.getElementById('progressFill'),
+            stats: document.getElementById('stats'),
+            currentQuestion: document.getElementById('currentQuestion'),
+            correctCount: document.getElementById('correctCount'),
+            totalQuestions: document.getElementById('totalQuestions'),
+            questionSection: document.getElementById('questionSection'),
+            questionNumber: document.getElementById('questionNumber'),
+            questionText: document.getElementById('questionText'),
+            chineseText: document.getElementById('chineseText'),
+            pinyinText: document.getElementById('pinyinText'),
+            optionsContainer: document.getElementById('optionsContainer'),
+            feedback: document.getElementById('feedback'),
+            controlButtons: document.getElementById('controlButtons'),
+            nextBtn: document.getElementById('nextBtn'),
+            resultSection: document.getElementById('resultSection'),
+            finalScore: document.getElementById('finalScore'),
+            resultMessage: document.getElementById('resultMessage')
+        };
+
+        // Start Quiz
+        function startQuiz() {
+            elements.startScreen.style.display = 'none';
+            elements.resultSection.style.display = 'none';
+            elements.progressBar.style.display = 'block';
+            elements.stats.style.display = 'flex';
+            elements.questionSection.style.display = 'block';
+            elements.controlButtons.style.display = 'flex';
+            
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            hasAnswered = false;
+            
+            updateStats();
+            showQuestion();
+        }
+
+        // Show Current Question
+        function showQuestion() {
+            if (currentQuestionIndex >= quizData.length) {
+                showResults();
+                return;
+            }
+
+            hasAnswered = false;
+            const current = quizData[currentQuestionIndex];
+            
+            elements.questionNumber.textContent = `Question ${currentQuestionIndex + 1} of ${quizData.length}`;
+            elements.questionText.textContent = current.question;
+            
+            // Only show Chinese text and pinyin if it's needed for the question
+            if (current.showChineseUpfront !== false) {
+                elements.chineseText.textContent = current.chinese;
+                elements.pinyinText.textContent = current.pinyin;
+                elements.chineseText.style.display = 'block';
+                elements.pinyinText.style.display = 'block';
+            } else {
+                elements.chineseText.textContent = '';
+                elements.pinyinText.textContent = '';
+                elements.chineseText.style.display = 'none';
+                elements.pinyinText.style.display = 'none';
+            }
+
+            // Handle images
+            const questionImageDiv = document.getElementById('questionImage');
+            if (current.image) {
+                if (current.image.placeholder) {
+                    // Show placeholder if image file doesn't exist or placeholder is true
+                    questionImageDiv.innerHTML = `
+                        <div class="image-placeholder">
+                            <div class="image-placeholder-icon">🖼️</div>
+                            <div>${current.image.description}</div>
+                            <div style="font-size: 0.8em; color: #999; margin-top: 5px;">
+                                Image path: ${current.image.src || 'No image path'}
+                            </div>
+                        </div>
+                    `;
+                } else if (current.image.src) {
+                    // Show actual image
+                    questionImageDiv.innerHTML = `
+                        <img src="${current.image.src}" 
+                             alt="${current.image.description}" 
+                             class="question-image"
+                             onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><div class=\\'image-placeholder-icon\\'>🖼️</div><div>${current.image.description}</div><div style=\\'font-size: 0.8em; color: #999; margin-top: 5px;\\'>Image not found: ${current.image.src}</div></div>'">
+                        <div class="image-description">${current.image.description}</div>
+                    `;
+                }
+            } else {
+                questionImageDiv.innerHTML = '';
+            }
+
+            elements.optionsContainer.innerHTML = '';
+            current.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.innerHTML = `
+                    <div class="option-chinese">${option.chinese}</div>
+                    <div class="option-pinyin">${option.pinyin}</div>
+                    <div class="option-english">${option.english}</div>
+                `;
+                button.addEventListener('click', () => selectAnswer(index, current.correct));
+                elements.optionsContainer.appendChild(button);
+            });
+
+            elements.feedback.textContent = '';
+            elements.feedback.className = 'feedback';
+            elements.nextBtn.style.display = 'none';
+            
+            updateProgress();
+        }
+
+        // Select Answer
+        function selectAnswer(selected, correct) {
+            if (hasAnswered) return;
+            
+            hasAnswered = true;
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach((btn, index) => {
+                btn.disabled = true;
+                if (index === correct) {
+                    btn.classList.add('correct');
+                } else if (index === selected && selected !== correct) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            const isCorrect = selected === correct;
+            if (isCorrect) {
+                correctAnswers++;
+                showFeedback('🎉 Correct! Well done!', 'correct');
+            } else {
+                const correctOption = quizData[currentQuestionIndex].options[correct];
+                showFeedback(`❌ Wrong! The correct answer is: ${correctOption.chinese} (${correctOption.pinyin})`, 'incorrect');
+            }
+
+            updateStats();
+            elements.nextBtn.style.display = 'inline-block';
+        }
+
+        // Skip Question
+        function skipQuestion() {
+            if (hasAnswered) return;
+            
+            hasAnswered = true;
+            const current = quizData[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach((btn, index) => {
+                btn.disabled = true;
+                if (index === current.correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            const correctOption = current.options[current.correct];
+            showFeedback(`⏭️ Skipped! The correct answer was: ${correctOption.chinese} (${correctOption.pinyin})`, 'skipped');
+            elements.nextBtn.style.display = 'inline-block';
+        }
+
+        // Next Question
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        // Show Feedback
+        function showFeedback(message, type) {
+            elements.feedback.textContent = message;
+            elements.feedback.className = `feedback ${type} show`;
+            
+            const colors = {
+                correct: '#27ae60',
+                incorrect: '#e74c3c',
+                skipped: '#f39c12'
+            };
+            
+            elements.feedback.style.backgroundColor = colors[type];
+            elements.feedback.style.color = 'white';
+        }
+
+        // Update Stats
+        function updateStats() {
+            elements.currentQuestion.textContent = currentQuestionIndex + 1;
+            elements.correctCount.textContent = correctAnswers;
+            elements.totalQuestions.textContent = quizData.length;
+        }
+
+        // Update Progress
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            elements.progressFill.style.width = `${progress}%`;
+        }
+
+        // Show Results
+        function showResults() {
+            elements.questionSection.style.display = 'none';
+            elements.controlButtons.style.display = 'none';
+            elements.progressBar.style.display = 'none';
+            elements.stats.style.display = 'none';
+            elements.resultSection.style.display = 'block';
+            
+            const percentage = Math.round((correctAnswers / quizData.length) * 100);
+            elements.finalScore.textContent = `${correctAnswers}/${quizData.length}`;
+            
+            let message = '';
+            let emoji = '';
+            if (percentage >= 90) {
+                message = 'Outstanding! You know Chinese culture very well!';
+                emoji = '🏆';
+            } else if (percentage >= 80) {
+                message = 'Excellent! Great knowledge of Chinese culture!';
+                emoji = '🌟';
+            } else if (percentage >= 70) {
+                message = 'Good job! You have a solid understanding!';
+                emoji = '👏';
+            } else if (percentage >= 60) {
+                message = 'Not bad! Keep learning and practicing!';
+                emoji = '👍';
+            } else {
+                message = 'Keep studying! Chinese culture is fascinating!';
+                emoji = '💪';
+            }
+            
+            elements.resultMessage.innerHTML = `${emoji} ${message}<br><span style="font-size: 0.8em; color: #7f8c8d;">You scored ${percentage}%</span>`;
+        }
+
+        // Back to Home
+        function backToHome() {
+            elements.resultSection.style.display = 'none';
+            elements.questionSection.style.display = 'none';
+            elements.progressBar.style.display = 'none';
+            elements.stats.style.display = 'none';
+            elements.controlButtons.style.display = 'none';
+            elements.startScreen.style.display = 'block';
+            
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            hasAnswered = false;
+            
+            elements.progressFill.style.width = '0%';
+            elements.feedback.textContent = '';
+            elements.feedback.className = 'feedback';
+            elements.nextBtn.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
